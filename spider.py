@@ -10,9 +10,7 @@ import requests
 
 #chrome_options设置
 chrome_options = webdriver.ChromeOptions()
-"""chrome_options.add_argument('--headless')"""#无头模式
-"""chrome_options.add_argument('--praxy-srever=http://171.12.313.34:9999')"""#设置代理ip
-"""chrome_options.add_argument('--user-agent=')"""#设置user-agent，可以设置成手机端的
+chrome_options.add_argument('--headless')#无头模式
 chrome_options.add_experimental_option("excludeSwitches", ['enable-automation', 'enable-logging'])#关闭日志
 chrome_options.add_argument('--disable-gpu') # 禁用GPU加速
 chrome_options.add_argument('--start-maximized')#浏览器最大化
@@ -45,7 +43,7 @@ def baidu_spider():
     driver.get(url)
     wait = WebDriverWait(driver,10)
     random_sleep(2,3)
-    keyword = "北京 inurl:asp?id=2"
+    keyword = "北京"
 
     print("正在搜索关键字:\n"+keyword)
     
@@ -82,17 +80,7 @@ def baidu_spider():
             print("url:"+url)
         driver.find_element(By.CSS_SELECTOR,'a+ .n').click()
 
-    """# 找到要点击的元素
-    element = driver.find_element(By.LINK_TEXT, '视频')
-
-    # 创建 ActionChains 对象
-    actions = ActionChains(driver)
-
-    # 在元素上执行点击操作
-    actions.click(element)
-
-    # 执行操作
-    actions.perform()"""
+    
     
     input('是否要关闭浏览器?')
     driver.quit()
