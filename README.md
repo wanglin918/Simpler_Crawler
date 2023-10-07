@@ -8,3 +8,6 @@
 
 # I will gradually improve this spider in the future, including using proxy pools, adding Google spiders, UI based, and more DIY customization
 
+# 如果有什么想法，或者有什么疑问都可以发邮箱给我（邮箱已公开），感激不尽
+
+# If you have any ideas or questions, please feel free to email me (email has been made public). Thank you very much
