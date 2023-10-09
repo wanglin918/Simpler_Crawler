@@ -30,7 +30,28 @@ def chrome_option(headless_mode,images_mode):
     chrome_options.add_experimental_option('prefs', prefs)  # 添加prefs
 
 
+<<<<<<< HEAD
     driver = webdriver.Chrome(options=chrome_options)
+=======
+#chrome_options设置
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless')#无头模式
+chrome_options.add_experimental_option("excludeSwitches", ['enable-automation', 'enable-logging'])#关闭日志
+chrome_options.add_argument('--disable-gpu') # 禁用GPU加速
+chrome_options.add_argument('--start-maximized')#浏览器最大化
+# 关闭'Chrome目前受到自動測試軟體控制'的提示
+chrome_options.add_experimental_option('useAutomationExtension', False)
+prefs = {
+        "download.default_directory":"D:\download",  # 设置浏览器下载地址(绝对路径)
+        "profile.managed_default_content_settings.images": 2,  # 不加载图片
+}
+chrome_options.add_experimental_option('prefs', prefs)  # 添加prefs
+driver = webdriver.Chrome(options=chrome_options)
+#屏蔽标记
+driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
+'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'
+})
+>>>>>>> 6adfb5c0fa10585cedb5ee1eee8681fd63ba15d4
 
     #屏蔽标记
     driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
@@ -85,7 +106,11 @@ def baidu_spider(headless_mode,images_mode,pagenum,keywords):
     
     
     random_sleep(2,3)
+<<<<<<< HEAD
     keyword = str(keywords)
+=======
+    keyword = "北京"
+>>>>>>> 6adfb5c0fa10585cedb5ee1eee8681fd63ba15d4
 
     print("正在搜索关键字:\n"+keyword)
     
@@ -121,17 +146,7 @@ def baidu_spider(headless_mode,images_mode,pagenum,keywords):
             print("url:"+url)
         driver.find_element(By.CSS_SELECTOR,'a+ .n').click()
 
-    """# 找到要点击的元素
-    element = driver.find_element(By.LINK_TEXT, '视频')
-
-    # 创建 ActionChains 对象
-    actions = ActionChains(driver)
-
-    # 在元素上执行点击操作
-    actions.click(element)
-
-    # 执行操作
-    actions.perform()"""
+    
     
     driver.quit()
 
