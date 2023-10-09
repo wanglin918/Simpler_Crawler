@@ -1,34 +1,43 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from bs4 import BeautifulSoup
 import time
 import random
 import requests
+from config import read_config
+import os
+
+def chrome_option(headless_mode,images_mode):
+    #chrome_options设置
+    chrome_options = webdriver.ChromeOptions()
+
+    if(headless_mode == False):
+        chrome_options.add_argument('--headless')#无头模式
+
+    chrome_options.add_experimental_option("excludeSwitches", ['enable-automation', 'enable-logging'])#关闭日志
+
+    chrome_options.add_argument('--disable-gpu') # 禁用GPU加速
+
+    chrome_options.add_argument('--start-maximized')#浏览器最大化
+
+    # 关闭'Chrome目前受到自動測試軟體控制'的提示
+    chrome_options.add_experimental_option('useAutomationExtension', False)
+
+    prefs = {
+            "download.default_directory":"D:\download",  # 设置浏览器下载地址(绝对路径)
+            "profile.managed_default_content_settings.images": images_mode,  # 不加载图片
+    }
+    chrome_options.add_experimental_option('prefs', prefs)  # 添加prefs
 
 
-#chrome_options设置
-chrome_options = webdriver.ChromeOptions()
-"""chrome_options.add_argument('--headless')"""#无头模式
-"""chrome_options.add_argument('--praxy-srever=http://171.12.313.34:9999')"""#设置代理ip
-"""chrome_options.add_argument('--user-agent=')"""#设置user-agent，可以设置成手机端的
-chrome_options.add_experimental_option("excludeSwitches", ['enable-automation', 'enable-logging'])#关闭日志
-chrome_options.add_argument('--disable-gpu') # 禁用GPU加速
-chrome_options.add_argument('--start-maximized')#浏览器最大化
-# 关闭'Chrome目前受到自動測試軟體控制'的提示
-chrome_options.add_experimental_option('useAutomationExtension', False)
-prefs = {
-        "download.default_directory":"D:\download",  # 设置浏览器下载地址(绝对路径)
-        "profile.managed_default_content_settings.images": 2,  # 不加载图片
-}
-chrome_options.add_experimental_option('prefs', prefs)  # 添加prefs
-driver = webdriver.Chrome(options=chrome_options)
-#屏蔽标记
-driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
-'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'
-})
+    driver = webdriver.Chrome(options=chrome_options)
 
+    #屏蔽标记
+    driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
+    'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'
+    })
+
+    return driver
 
 
 def random_sleep(start,end):
@@ -37,15 +46,46 @@ def random_sleep(start,end):
     print("随机暂停{}秒".format(t))
     time.sleep(t)
 
-def baidu_spider():
-    
+def baidu_spider(headless_mode,images_mode,pagenum,keywords):
+
+    #chrome_options设置
+    chrome_options = webdriver.ChromeOptions()
+
+    if(headless_mode == False):
+        chrome_options.add_argument('--headless')#无头模式
+
+    chrome_options.add_experimental_option("excludeSwitches", ['enable-automation', 'enable-logging'])#关闭日志
+
+    chrome_options.add_argument('--disable-gpu') # 禁用GPU加速
+
+    chrome_options.add_argument('--start-maximized')#浏览器最大化
+
+    # 关闭'Chrome目前受到自動測試軟體控制'的提示
+    chrome_options.add_experimental_option('useAutomationExtension', False)
+
+    prefs = {
+            "download.default_directory":"D:\download",  # 设置浏览器下载地址(绝对路径)
+            "profile.managed_default_content_settings.images": images_mode,  # 不加载图片
+    }
+    chrome_options.add_experimental_option('prefs', prefs)  # 添加prefs
+
+
+    driver = webdriver.Chrome(options=chrome_options)
+
+    #屏蔽标记
+    driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
+    'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'
+    })
+
     url = "https://www.baidu.com"
+    
+    driver.get(url)
 
     print("正在打开百度")
-    driver.get(url)
-    wait = WebDriverWait(driver,10)
+    
+    
     random_sleep(2,3)
-    keyword = "北京 inurl:asp?id=2"
+    keyword = str(keywords)
 
     print("正在搜索关键字:\n"+keyword)
     
@@ -57,7 +97,7 @@ def baidu_spider():
     btnParent = driver.find_element(By.ID,'su')
     btnParent.click()
     random_sleep(2,3)
-    page = 5
+    page = pagenum
     for i in range(1,page+1):
         print("第{}页".format(i))
         random_sleep(5,6)
@@ -94,16 +134,21 @@ def baidu_spider():
     # 执行操作
     actions.perform()"""
     
-    input('是否要关闭浏览器?')
     driver.quit()
 
 
 
+if __name__ == "__main__":
+    # 调用读取配置的函数
+    # 获取当前脚本所在的目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
 
+    # 构建相对路径
+    config_file = os.path.join(current_dir, 'config.ini')
+    headless, images, pages, keywords = read_config(config_file)
 
-
-
-baidu_spider()
+    
+    baidu_spider(headless,images,pages,keywords)
 
 
 
