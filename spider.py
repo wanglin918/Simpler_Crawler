@@ -107,7 +107,6 @@ def baidu_spider(headless_mode,images_mode,pagenum,keywords):
         with open('baidu.html','w',encoding='utf-8') as f:
             f.write(page_source)
 
-
         #数据榨取
         soup = BeautifulSoup(open('baidu.html',encoding='utf-8'),'lxml')
         titles = soup.select('h3[class="c-title t t tts-title"]')
@@ -145,9 +144,9 @@ if __name__ == "__main__":
 
     # 构建相对路径
     config_file = os.path.join(current_dir, 'config.ini')
+    
     headless, images, pages, keywords = read_config(config_file)
 
-    
     baidu_spider(headless,images,pages,keywords)
 
 
